@@ -6,6 +6,7 @@ import useAuth from "../hooks/useAuth";
 import LoadingSpinner from "./shared/LoadingSpinner";
 import { useNavigate } from "react-router-dom";
 import AddTask from "./task/AddTask";
+import toast from "react-hot-toast";
 
 function DragAndDrop() {
     const dragItem = useRef();
@@ -85,10 +86,9 @@ function DragAndDrop() {
         const category = form.category.value;
 
         document.getElementById(id).close();
-
         try {
             const editedTask = await axiosPublic.put(`/task-update/${id}`, { title, description, category });
-            console.log(editedTask);
+            if (editedTask.modifiedCount) toast.success('Successfully Updated Task !');
             refetch();
         }
         catch (error) {
