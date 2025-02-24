@@ -17,7 +17,7 @@ function Header() {
             </div>
             <div className="navbar-center">
                 <div className="text-center mt-6">
-                    <h1 className="text-4xl font-bold">!ZenTask</h1>
+                    <h1 className="text-4xl font-bold">!ZenAction</h1>
                     <p>Task Management System</p>
                 </div>
             </div>

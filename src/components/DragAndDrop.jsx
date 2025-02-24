@@ -110,7 +110,7 @@ function DragAndDrop() {
 
     return (
         <section className="container mx-auto px-4">
-            <h1 className="text-center text-4xl font-bold my-4 flex justify-center items-center">KanBan Board <span><button onClick={handelLogout} className="btn ml-6">LogOut</button></span></h1>
+            <h1 className="text-center text-4xl font-bold my-4 flex justify-center items-center">ZenAction <span><button onClick={handelLogout} className="btn ml-6">LogOut</button></span></h1>
             <div>
                 <AddTask />
             </div>
