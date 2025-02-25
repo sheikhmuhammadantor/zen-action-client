@@ -9,7 +9,7 @@ const RegistrationForm = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const from = location?.state?.from?.pathname || '/';
-    const { user, loading, setLoading, createUser } = useAuth();
+    const { user, loading, setLoading, createUser, googleSignIn } = useAuth();
     const axiosPublic = useAxiosPublic();
     const [formData, setFormData] = useState({
         email: "",
@@ -44,13 +44,30 @@ const RegistrationForm = () => {
             const { confirmPassword, ...safeFormData } = formData;
             const res = await axiosPublic.post(`/users`, safeFormData);
 
-            navigate(from, { replace: true })
+            navigate('/')
             if (res.data.insertedId) toast.success("Registration successful!");
         } catch (error) {
             console.error("Registration failed:", error);
             toast.error('Something Want Wrong, Try Again !');
         } finally { setLoading(false) };
     };
+
+    const handelGoogleLogIn = async () => {
+        try {
+            const res = await googleSignIn();
+            const { email, displayName } = res.user;
+
+            if (email) {
+                const res = await axiosPublic.post(`/users`, { email, displayName });
+
+                navigate('/');
+                if (res.data.insertedId) { toast.success('Successfully Sign In !', {}) }
+            }
+        } catch (error) {
+            console.error("Registration failed:", error);
+            toast.error('Something Want Wrong, Try Again !');
+        }
+    }
 
     return (
         <div className="flex justify-center items-center min-h-screen bg-base-100">
@@ -96,6 +113,7 @@ const RegistrationForm = () => {
                     <button type="submit" className="btn bg-blood text-white w-full">
                         Register
                     </button>
+                    <button type='button' onClick={handelGoogleLogIn} className="btn btn-accent text-base-content px-8 w-full">or, Register With Google</button>
                 </form>
                 <div className='flex items-center pt-4 space-x-1'>
                     <div className='flex-1 h-px sm:w-16'></div>

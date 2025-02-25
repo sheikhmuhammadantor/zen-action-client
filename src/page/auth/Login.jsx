@@ -2,11 +2,13 @@ import { Link, Navigate, useLocation, useNavigate } from 'react-router-dom'
 import useAuth from '../../hooks/useAuth'
 import toast from 'react-hot-toast'
 import LoadingSpinner from '../../components/shared/LoadingSpinner'
+import useAxiosPublic from '../../hooks/useAxiosPublic'
 
 const Login = () => {
-  const { signIn, user, loading, setLoading } = useAuth()
-  const navigate = useNavigate()
-  const location = useLocation()
+  const { signIn, user, loading, setLoading, googleSignIn } = useAuth()
+  const navigate = useNavigate();
+  const location = useLocation();
+  const axiosPublic = useAxiosPublic();
   const from = location?.state?.from?.pathname || '/'
 
   if (user) return <Navigate to={from} replace={true} />
@@ -27,6 +29,23 @@ const Login = () => {
       toast.error(err?.message)
     }
     setLoading(false);
+  }
+
+  const handelGoogleLogIn = async () => {
+    try {
+      const res = await googleSignIn();
+      const { email, displayName } = res.user;
+
+      if (email) {
+        const res = await axiosPublic.post(`/users`, { email, displayName });
+
+        navigate('/');
+        if (res.data.insertedId) { toast.success('Successfully Sign In !', {}) }
+      }
+    } catch (error) {
+      console.error("Registration failed:", error);
+      toast.error('Something Want Wrong, Try Again !');
+    }
   }
 
   return (
@@ -87,10 +106,11 @@ const Login = () => {
           </div>
         </form>
         <div className='space-y-1'>
-          <button type='button' className='text-xs hover:underline hover:text-blood text-base-content'>
+          <button type='button' className='text-xs hover:underline hover:text-blood text-base-content mb-2'>
             Forgot password?
           </button>
         </div>
+        <button type='button' onClick={handelGoogleLogIn} className="btn btn-accent text-base-content px-8 w-full">or, Continue With Google</button>
         <div className='flex items-center pt-4 space-x-1'>
           <div className='flex-1 h-px sm:w-16'></div>
           <p className='px-3 text-sm text-base-content'>

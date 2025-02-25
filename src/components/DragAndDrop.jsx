@@ -88,7 +88,7 @@ function DragAndDrop() {
         document.getElementById(id).close();
         try {
             const editedTask = await axiosPublic.put(`/task-update/${id}`, { title, description, category });
-            if (editedTask.modifiedCount) toast.success('Successfully Updated Task !');
+            if (editedTask?.data?.modifiedCount) toast.success('Successfully Updated Task !');
             refetch();
         }
         catch (error) {
